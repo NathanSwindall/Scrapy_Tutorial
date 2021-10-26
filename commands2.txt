@@ -1,0 +1,135 @@
+--create a virtual environment
+python -m venv venv
+
+
+--activate the virutal environmentS
+source venv/Scripts/activate
+
+--build project
+scrapy startproject whiskyscraper
+
+
+--Files in scrapy project
+    --spiders 
+        Where we write the python code for our spiders
+    --__init__.py
+        Don't need to worry about it
+    --items.py
+        particular field of items
+            -author
+            -quote
+            -tags
+    --middlewares
+        -This is where you will add proxies
+        -Adding stuff to our requests
+        -Proxy is basically using different ip addresses
+    --pipelines
+        -This will store the data in a file
+        -You can store it in a MongoDB (use the Atlas)
+    --settings
+        User agent = who you are (what is your domain)
+        Concurrent requests = asking a website to open up (do not put too much because it can cause a lot of overload to website)
+
+
+
+
+--websites for learning
+https://www.youtube.com/watch?v=s4jtkzHhLzY
+https://www.youtube.com/watch?v=QhuUi9cWZNQ
+https://www.youtube.com/watch?v=mTOXVRao3eA
+https://www.youtube.com/watch?v=0FknvLSLbl4
+https://www.youtube.com/watch?v=2vcp0fKq3aw
+https://www.youtube.com/watch?v=ve_0h4Y8nuI&list=PLhTjy8cBISEqkN-5Ku_kXG4QW33sxQo0t
+
+--website to crawl
+https://www.whiskyshop.com/catalogsearch/result/index/?q=scotch&item_availability=In+Stock
+
+
+--access scrapy shell (inside the folder)
+scrapy shell
+fetch('https://www.whiskyshop.com/catalogsearch/result/index/?q=scotch&item_availability=In+Stock')
+or
+scrapy shell "website" ex scrap shell "http://quotes.toscrape.com/"
+response (variable you get when you run)
+
+
+--https://github.com/fastai
+--This is a cool website
+--learning other stuff might not be that cool or maybe it might be cool
+--Putting stuff into haskell
+https://www.youtube.com/playlist?list=PLtmWHNX-gukKocXQOkQjuVxglSDYWsSh9
+
+
+--shell commands
+response = fetch('website url')
+response.css('div.product-item-info').get()
+products = response.css('div.product-item-info')
+length = len(products)
+prices = products.css('a.product')
+atags_ = [a.attrib['href'] for a in products.css('a.product')]
+atags_ = [(a.attrib['href'], a.attrib['data-name'], a.attrib['data-price']) for a in products.css('a.product')]
+products_prices = [(a.attrib['data-price'],attrib['data-name']) for a in products.css('a.product')]
+
+. for any classes like a.product.photo.product-info
+::text like a.product::text
+.replace for quickly messing with strings
+atags_ = [(a.attrib['href'], a.attrib['data-name'], a.attrib['data-price'].replace('.','$')) for a in products.css('a.product')]
+
+
+--running your spider
+make sure you are running with the venv 
+    -source venv/Scripts/activate 
+    -then make sure you are in the whiskyscraper file
+    -then use scrapy crawl whisky  (the spider name is whisky because WhiskySpider)
+
+Outputting different types of files
+scrapy crawl whisky -O whisky.json
+
+
+
+--/Desktop/Current/Python/WebCrawler/scrapy/quotext
+--Running the simple quote spider
+    --/Desktop/Current/Python/WebCrawler/scrapy/quotext
+
+    Activate your spider
+        source venv/Scripts/activate
+
+    Start up the shell (not from inside quotext, but inisde scrapy)
+        scrapy shell "http://quotes.toscrape.com/"
+        
+    getting list
+        response.css("title::text").extract() 
+    getting string
+        response.css("title::text").get()
+        response.css("title::text").extract_first()
+
+    Really coool chrome extension for finding CSS selectors
+        --Selector gadget chrome
+
+    --getting text
+    --Questions
+        How do you get all authors
+        How do you get the second author
+        How do you get all quotes
+        How do we get titles of all persian books on the first page
+            response.css(".a-color-base.a-text-normal::text").extract()
+            response.css(".a-color-base.a-text-normal:;text")[0].extract()
+
+    Using xpath
+        getting title
+            response.xpath("//title/text()").extract()
+        getting quotes 
+            response.xpath("//span[@class='text']/text()").extract() 
+        getting next button href 
+            response.css("li.next a").xpath("@href").extract()
+
+
+
+
+
+
+
+
+Ideas
+    Scrap hacker news
+    Scrap your facebook and do sentiment analysis on your facebook posts and comments to see if there is an overly positive or overly negative response
